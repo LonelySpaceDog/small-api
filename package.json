@@ -1,15 +1,15 @@
 {
   "name": "myapi",
   "version": "1.0.0",
-  "description": "",
+  "description": "api for portfolio",
   "main": "app.js",
   "scripts": {
     "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "debug": "ndb server.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "LonelySpaceDog",
+  "license": "GPL-3.0",
   "dependencies": {
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
