@@ -1,14 +1,14 @@
 api for portfolio <br/>
 
-## installation:
+## Installation:
 
 ```
 git clone https://github.com/LonelySpaceDog/small-api/
 cd small-api
 npm install
 ```
-
-## to run server:
+Also you may want to check config.env
+## To run server:
 
 ```
 npm start
