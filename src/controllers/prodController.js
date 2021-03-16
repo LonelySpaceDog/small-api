@@ -25,3 +25,14 @@ exports.getProd = catchAsync(async (req, res, next) => {
     }
   })
 })
+
+exports.createProd = catchAsync(async (req, res, next) => {
+  const newProd = await Product.create(req.body);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      newProd
+    }
+  })
+})
