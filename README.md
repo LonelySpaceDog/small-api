@@ -14,7 +14,7 @@ Also you may want to check config.env
 npm start
 ```
 
-Address to send requests to api:
+Address for sending requests to api:
 [http://localhost:3000](http://localhost:3000)
 
 ## Additional scripts
