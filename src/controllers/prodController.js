@@ -1,9 +1,14 @@
-//const mongoose = require(`mongoose`);
 const Product = require(`${__dirname}/../models/prodModel`);
 const catchAsync = require(`${__dirname}/../utils/catchAsync`);
+const apiFeatures = require(`${__dirname}/../utils/apiFeatures`);
 
-exports.getAllProd = catchAsync(async (req, res, next) => {
-  const products = await Product.find();
+exports.getAllProd = catchAsync(async (req, res, _next) => {
+  const features = new apiFeatures(Product.find(), req.query)
+    .filter()
+    .sort()
+    .limmitFields()
+    .paginate();
+  const products = await features.query;
 
   res.status(200).json({
     status: 'success',
@@ -13,9 +18,9 @@ exports.getAllProd = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getProd = catchAsync(async (req, res, next) => {
+exports.getProd = catchAsync(async (req, res, _next) => {
   const slug = req.params.slug;
-  const product = await Product.find({slug});
+  const product = await Product.find({ slug });
   res.status(200).json({
     status: 'success',
     data: {
@@ -24,7 +29,7 @@ exports.getProd = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createProd = catchAsync(async (req, res, next) => {
+exports.createProd = catchAsync(async (req, res, _next) => {
   const newProd = await Product.create(req.body);
 
   res.status(200).json({
@@ -35,9 +40,9 @@ exports.createProd = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.updateProd = catchAsync(async (req, res, next) => {
+exports.updateProd = catchAsync(async (req, res, _next) => {
   const slug = req.params.slug;
-  const product = await Product.findOneAndUpdate({slug}, req.body, {
+  const product = await Product.findOneAndUpdate({ slug }, req.body, {
     new: true,
     runValidators: true,
   });
@@ -49,9 +54,9 @@ exports.updateProd = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.deleteProd = catchAsync(async (req, res, next) => {
+exports.deleteProd = catchAsync(async (req, res, _next) => {
   const slug = req.params.slug;
-  const product = await Product.findAndDelete({slug});
+  const product = await Product.findOneAndDelete({ slug });
   if (!product) {
     res.status(404).json({
       status: 'fail',
