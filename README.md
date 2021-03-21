@@ -1,18 +1,28 @@
-api for portfolio <br/>
+RESTful API for portfolio <br/>
 
 ## Installation:
 
-```
+```sh
 git clone https://github.com/LonelySpaceDog/small-api/
 cd small-api
 npm install
 ```
+
 Also you may want to check config.env
+
 ## To run server:
 
+```sh
+npm run start:dev
 ```
-npm start
+
+For devolopment
+
+```sh
+npm run start:prod
 ```
+
+For deploying in production
 
 Address for sending requests to api:
 [http://localhost:3000](http://localhost:3000)
