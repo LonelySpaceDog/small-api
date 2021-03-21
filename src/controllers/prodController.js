@@ -1,6 +1,7 @@
 const Product = require(`${__dirname}/../models/prodModel`);
 const catchAsync = require(`${__dirname}/../utils/catchAsync`);
 const apiFeatures = require(`${__dirname}/../utils/apiFeatures`);
+const AppError = require(`${__dirname}/../utils/appError`);
 
 exports.aliasTop5 = (req, _res, next) => {
   req.query.limit = '5';
@@ -26,9 +27,14 @@ exports.getAllProd = catchAsync(async (req, res, _next) => {
   });
 });
 
-exports.getProd = catchAsync(async (req, res, _next) => {
+exports.getProd = catchAsync(async (req, res, next) => {
   const slug = req.params.slug;
-  const product = await Product.find({ slug });
+  const product = await Product.findOne({ slug });
+
+  if (!product) {
+    return next(new AppError('No product with this slug', 404));
+  }
+
   res.status(200).json({
     status: 'success',
     data: {
@@ -48,12 +54,17 @@ exports.createProd = catchAsync(async (req, res, _next) => {
   });
 });
 
-exports.updateProd = catchAsync(async (req, res, _next) => {
+exports.updateProd = catchAsync(async (req, res, next) => {
   const slug = req.params.slug;
   const product = await Product.findOneAndUpdate({ slug }, req.body, {
     new: true,
     runValidators: true,
   });
+
+  if (!product) {
+    return next(new AppError('No product with this slug', 404));
+  }
+
   res.status(200).json({
     status: 'success',
     data: {
@@ -62,14 +73,11 @@ exports.updateProd = catchAsync(async (req, res, _next) => {
   });
 });
 
-exports.deleteProd = catchAsync(async (req, res, _next) => {
+exports.deleteProd = catchAsync(async (req, res, next) => {
   const slug = req.params.slug;
   const product = await Product.findOneAndDelete({ slug });
   if (!product) {
-    res.status(404).json({
-      status: 'fail',
-      message: 'There is no product with this slug',
-    });
+    return next(new AppError('No product found with that slug', 404));
   }
   res.status(201).json({
     status: 'success',

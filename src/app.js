@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const prodRoute = require(`${__dirname}/routes/prodRoute`);
+const globalErrorHandler = require(`${__dirname}/controllers/errorController`);
 
 app.use(morgan('dev'));
 
@@ -9,4 +10,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 app.use('/api/v1/products', prodRoute); //API ROUTES MIDDLEWARE
+
+app.use(globalErrorHandler);
+
 module.exports = app;
