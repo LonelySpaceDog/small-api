@@ -7,7 +7,8 @@
     "start:dev": "NODE_ENV=development nodemon --ignore 'data/*' src/server.js",
     "start:prod": "NODE_PROD=production nodemon --ignore 'data/* src/server.js'",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "debug": "ndb src/server.js"
+    "debug": "ndb src/server.js",
+    "import:db": "node data/scripts/import-db-data.js"
   },
   "author": "LonelySpaceDog",
   "license": "AGPL-3.0",

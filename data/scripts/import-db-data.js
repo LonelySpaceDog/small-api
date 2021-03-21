@@ -8,10 +8,11 @@ const DB = process.env.DATABASE.replace(
   process.env.DATABASE_PASSWORD,
 ).replace('<username>', process.env.DATABASE_USERNAME);
 
-if (process.argv[2] === '--help') {
+if (process.argv[2] === '--help' || !process.argv[2]) {
   console.log(
-    '--delete\tDelete all documents in DB\n\
---import\tImport documents from data.json',
+    '  --delete\tDelete all documents in DB\n\
+  --import\tImport documents from data.json\n\
+  --help\tTo print this message',
   );
   process.exit(0);
 }
