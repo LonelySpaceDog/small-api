@@ -30,7 +30,12 @@ Address for sending requests to api:
 ## Additional scripts
 
 `npm run debug`
+
 To debug with ndb
+
+`npm run import:db`
+
+For import db from data/data.json file.
 
 ## Documentation
 
