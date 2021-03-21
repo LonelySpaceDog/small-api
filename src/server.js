@@ -1,6 +1,12 @@
 const dotenv = require('dotenv');
 dotenv.config({ path: `${__dirname}/../config.env` });
 const mongoose = require('mongoose');
+
+process.on('uncaughtException', (err) => {
+  console.log(err);
+  process.exit(1);
+});
+
 const app = require(`${__dirname}/app`);
 
 const DB = process.env.DATABASE.replace(
@@ -19,7 +25,22 @@ mongoose
     console.log(`DB is connected`);
   });
 
+process.on('uncaughtException', (err) => {
+  console.log(err);
+  server.close(() => {
+    process.exit(1);
+  });
+});
+
 const port = process.env.PORT;
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
+});
+
+process.on('unhandledRejection', (err) => {
+  console.log(err);
+  console.log('Shutting down...');
+  server.close(() => {
+    process.exit(1);
+  });
 });

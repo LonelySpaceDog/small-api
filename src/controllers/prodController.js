@@ -1,4 +1,4 @@
-const Product = require(`${__dirname}/../models/prodModel`);
+const Products = require(`${__dirname}/../models/prodModel`);
 const catchAsync = require(`${__dirname}/../utils/catchAsync`);
 const apiFeatures = require(`${__dirname}/../utils/apiFeatures`);
 const AppError = require(`${__dirname}/../utils/appError`);
@@ -7,12 +7,11 @@ exports.aliasTop5 = (req, _res, next) => {
   req.query.limit = '5';
   req.query.sort = '-ratingsAverage,price';
   req.query.fields = 'name,price,ratingsAverega,summery';
-  console.log(req.query);
   next();
 };
 
 exports.getAllProd = catchAsync(async (req, res, _next) => {
-  const features = new apiFeatures(Product.find(), req.query)
+  const features = new apiFeatures(Products.find(), req.query)
     .filter()
     .sort()
     .limmitFields()
@@ -29,7 +28,7 @@ exports.getAllProd = catchAsync(async (req, res, _next) => {
 
 exports.getProd = catchAsync(async (req, res, next) => {
   const slug = req.params.slug;
-  const product = await Product.findOne({ slug });
+  const product = await Products.findOne({ slug });
 
   if (!product) {
     return next(new AppError('No product with this slug', 404));
@@ -44,7 +43,7 @@ exports.getProd = catchAsync(async (req, res, next) => {
 });
 
 exports.createProd = catchAsync(async (req, res, _next) => {
-  const newProd = await Product.create(req.body);
+  const newProd = await Products.create(req.body);
 
   res.status(200).json({
     status: 'success',
@@ -56,7 +55,7 @@ exports.createProd = catchAsync(async (req, res, _next) => {
 
 exports.updateProd = catchAsync(async (req, res, next) => {
   const slug = req.params.slug;
-  const product = await Product.findOneAndUpdate({ slug }, req.body, {
+  const product = await Products.findOneAndUpdate({ slug }, req.body, {
     new: true,
     runValidators: true,
   });
@@ -75,12 +74,34 @@ exports.updateProd = catchAsync(async (req, res, next) => {
 
 exports.deleteProd = catchAsync(async (req, res, next) => {
   const slug = req.params.slug;
-  const product = await Product.findOneAndDelete({ slug });
+  const product = await Products.findOneAndDelete({ slug });
   if (!product) {
     return next(new AppError('No product found with that slug', 404));
   }
   res.status(201).json({
     status: 'success',
     data: null,
+  });
+});
+
+exports.getAllCategories = catchAsync(async (req, res, _next) => {
+  const categories = await Products.aggregate([
+    {
+      $group: {
+        _id: '$category',
+        numProds: { $sum: 1 },
+        minPrice: { $min: '$price' },
+        maxPrice: { $max: '$price' },
+      },
+    },
+    {
+      $sort: {
+        name: 1,
+      },
+    },
+  ]);
+  res.status(200).json({
+    status: 'success',
+    data: categories,
   });
 });

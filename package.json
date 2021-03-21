@@ -4,8 +4,8 @@
   "description": "api for portfolio",
   "main": "app.js",
   "scripts": {
-    "start:dev": "NODE_ENV=\"devolopment\" nodemon --ignore 'data/*' src/server.js",
-    "start:prod": "NODE_PROD=\"production\" nodemon --ignore 'data/* src/server.js'",
+    "start:dev": "NODE_ENV=development nodemon --ignore 'data/*' src/server.js",
+    "start:prod": "NODE_PROD=production nodemon --ignore 'data/* src/server.js'",
     "test": "echo \"Error: no test specified\" && exit 1",
     "debug": "ndb src/server.js"
   },
@@ -16,7 +16,8 @@
     "express": "^4.17.1",
     "mongoose": "^5.12.0",
     "morgan": "^1.10.0",
-    "slugify": "^1.4.7"
+    "slugify": "^1.4.7",
+    "validator": "^13.5.2"
   },
   "devDependencies": {
     "eslint": "^7.22.0",

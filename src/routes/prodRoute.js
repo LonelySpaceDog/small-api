@@ -3,6 +3,8 @@ const prodController = require(`${__dirname}/../controllers/prodController`);
 
 router.route('/top5').get(prodController.aliasTop5, prodController.getAllProd);
 
+router.route('/categories').get(prodController.getAllCategories);
+
 router
   .route('/')
   .get(prodController.getAllProd)

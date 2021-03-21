@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+//const validator = require('validator');
 
 const prodSchema = new mongoose.Schema(
   {
@@ -13,10 +14,21 @@ const prodSchema = new mongoose.Schema(
       type: Number,
       required: [true, 'product must have a price'],
     },
-    slug: String,
+    slug: {
+      type: String,
+      unique: true,
+    },
     ratingsAverage: {
       type: Number,
       default: 0,
+    },
+    category: {
+      type: String,
+      required: [true, 'Your product must have category'],
+      enum: {
+        values: ['cpu', 'gpu', 'motherboard', 'HDD', 'Microphone'],
+        message: `There is no category called`,
+      },
     },
     summery: {
       type: String,
