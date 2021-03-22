@@ -42,7 +42,13 @@ const handleValidationErrorDB = (err) => {
   return new AppError(message, 400);
 };
 
-module.exports = (err, req, res, next) => {
+const handleJWTError = (_err) =>
+  new AppError('Invalid token. Please login again!', 401);
+
+const handleJWTExpiredError = (_err) =>
+  new AppError('Expired token. Please login again!', 401);
+
+module.exports = (err, req, res, _next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
   if (process.env.NODE_ENV === 'development') {
@@ -64,12 +70,16 @@ module.exports = (err, req, res, next) => {
   if (error.name === 'ValidationError') {
     error = handleValidationErrorDB(error);
   }
+  if (error.name === 'JsonWebTokenError') {
+    error = handleJWTError(error);
+  }
+  if (error.name === 'TokenExpiredError') {
+    error = handleJWTExpiredError(error);
+  }
   if (process.env.NODE_ENV === 'production') {
     sendErrorProd(error, res);
   } else {
-    console.log('bad node_env');
-    sendErrorDev(
-      new AppError({ statusCode: 500, message: 'Bad NODE_ENV value.' }, res),
-    );
+    console.log('bad node_env; errors in dev mode');
+    sendErrorDev(err, res);
   }
 };
