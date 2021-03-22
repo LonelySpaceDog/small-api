@@ -32,7 +32,7 @@ class APIFeatures {
 
   limmitFields() {
     //Default fields option
-    let fields = '-__v ' + '-_id ';
+    let fields = '-__v ';
     //If there some fields in request then add them to default options
     if (this.queryString.fields) {
       fields = this.queryString.fields.split(',').join(' ');

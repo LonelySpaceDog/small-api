@@ -27,11 +27,11 @@ exports.getAllProd = catchAsync(async (req, res, _next) => {
 });
 
 exports.getProd = catchAsync(async (req, res, next) => {
-  const slug = req.params.slug;
-  const product = await Products.findOne({ slug });
+  console.log(req.params);
+  const product = await Products.findById(req.params.id);
 
   if (!product) {
-    return next(new AppError('No product with this slug', 404));
+    return next(new AppError('No product with this id', 404));
   }
 
   res.status(200).json({
@@ -54,14 +54,14 @@ exports.createProd = catchAsync(async (req, res, _next) => {
 });
 
 exports.updateProd = catchAsync(async (req, res, next) => {
-  const slug = req.params.slug;
-  const product = await Products.findOneAndUpdate({ slug }, req.body, {
+  const id = req.params.id;
+  const product = await Products.findByIdAndUpdate(id, req.body, {
     new: true,
     runValidators: true,
   });
 
   if (!product) {
-    return next(new AppError('No product with this slug', 404));
+    return next(new AppError('No product with this id', 404));
   }
 
   res.status(200).json({
@@ -73,10 +73,10 @@ exports.updateProd = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteProd = catchAsync(async (req, res, next) => {
-  const slug = req.params.slug;
-  const product = await Products.findOneAndDelete({ slug });
+  const id = req.params.id;
+  const product = await Products.findByIdAndDelete(id);
   if (!product) {
-    return next(new AppError('No product found with that slug', 404));
+    return next(new AppError('No product found with that id', 404));
   }
   res.status(201).json({
     status: 'success',
@@ -96,7 +96,7 @@ exports.getAllCategories = catchAsync(async (req, res, _next) => {
     },
     {
       $sort: {
-        name: 1,
+        _id: 1,
       },
     },
   ]);

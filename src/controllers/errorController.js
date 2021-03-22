@@ -37,7 +37,6 @@ const handleDublicatedFieldsDB = (err) => {
 };
 
 const handleValidationErrorDB = (err) => {
-  console.log('validerror');
   const errors = Object.values(err.errors).map((el) => el.message);
   const message = `Invalid input data. ${errors.join('. ')}`;
   return new AppError(message, 400);
@@ -46,7 +45,16 @@ const handleValidationErrorDB = (err) => {
 module.exports = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
-  let error = { ...err };
+  if (process.env.NODE_ENV === 'development') {
+    return sendErrorDev(err, res);
+  }
+  let error = {
+    name: err.name,
+    code: err.code,
+    status: err.status,
+    statusCode: err.StatusCode,
+    message: err.message,
+  };
   if (error.name === 'CastError') {
     error = handleCastErrorDB(error);
   }
@@ -56,11 +64,12 @@ module.exports = (err, req, res, next) => {
   if (error.name === 'ValidationError') {
     error = handleValidationErrorDB(error);
   }
-  if (process.env.NODE_ENV === 'development') {
-    sendErrorDev(error, res);
-  } else if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'production') {
     sendErrorProd(error, res);
   } else {
-    sendErrorDev(new AppError('Bad NODE_ENV value.', res));
+    console.log('bad node_env');
+    sendErrorDev(
+      new AppError({ statusCode: 500, message: 'Bad NODE_ENV value.' }, res),
+    );
   }
 };

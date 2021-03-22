@@ -11,7 +11,7 @@ router
   .post(prodController.createProd);
 
 router
-  .route('/:slug')
+  .route('/:id')
   .get(prodController.getProd)
   .patch(prodController.updateProd)
   .delete(prodController.deleteProd);
