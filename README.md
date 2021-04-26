@@ -1,4 +1,4 @@
-RESTful API for portfolio <br/>
+RESTful API for learning <br/>
 
 ## Installation:
 
